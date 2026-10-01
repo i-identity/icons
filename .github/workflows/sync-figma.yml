@@ -1,0 +1,36 @@
+# ทางสำรอง: กด "Run workflow" (หรือรันอัตโนมัติทุกคืน) เพื่อดึงไอคอนทั้งหน้าจาก Figma แล้วเปิด PR
+name: Sync icons from Figma
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "0 18 * * 1-5"   # 01:00 เวลาไทย จันทร์–ศุกร์
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run sync:figma
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+          FIGMA_FILE_KEY: ${{ vars.FIGMA_FILE_KEY }}
+          FIGMA_ICONS_NODE: ${{ vars.FIGMA_ICONS_NODE }}
+      - run: npm run build
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: icons/figma-sync
+          title: "Sync icons from Figma"
+          commit-message: "feat(icons): sync from Figma"
+          body: "ดึงไอคอนจาก Figma อัตโนมัติ — ดูหน้า Preview ได้ใน Artifacts ของ Check icons"
+          add-paths: |
+            svg/**
+            .changeset/**

@@ -1,0 +1,30 @@
+{
+  "name": "@i-identity/icons",
+  "version": "0.1.0",
+  "description": "Icon library ของทีม — ต้นฉบับอยู่ใน Figma, build เป็น Iconify JSON สำหรับ Nuxt UI / @nuxt/icon",
+  "type": "module",
+  "iconPrefix": "np",
+  "iconSize": 24,
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.mjs" },
+    "./icons.json": "./dist/icons.json"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "sync:figma": "node scripts/sync-figma.mjs",
+    "changeset": "changeset",
+    "release": "npm run build && changeset publish"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-identity/icons.git"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.0",
+    "svgo": "^4.0.0"
+  }
+}

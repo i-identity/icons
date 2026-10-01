@@ -1,0 +1,22 @@
+# ตรวจทุก PR: ไอคอนต้องผ่านกติกา + แนบหน้า Preview ให้รีวิว
+name: Check icons
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Upload preview (เปิดไฟล์ preview.html ใน Artifacts เพื่อดูไอคอน)
+        uses: actions/upload-artifact@v4
+        with:
+          name: icon-preview
+          path: dist/preview.html
